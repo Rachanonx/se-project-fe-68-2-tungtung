@@ -1,6 +1,7 @@
 import Image from "next/image";
 import getProvider from "@/libs/getProvider";
 import Link from "next/link";
+import ReviewSection from "@/components/ReviewSection";
 
 const images = [
   "/img/banner1.png",
@@ -84,6 +85,9 @@ export default async function VenueDetailPage({
           />
         </div>
       </div>
+
+      {/* Review Section */}
+      <ReviewSection providerId={vid} providerName={venueDetail.data.name} />
     </main>
   );
 }
