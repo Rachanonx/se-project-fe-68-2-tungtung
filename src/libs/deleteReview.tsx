@@ -15,12 +15,12 @@ export default async function deleteReview(
     );
 
     let errorData: any = null;
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers?.get?.("content-type") || "";
     
     try {
-      if (contentType?.includes("application/json")) {
+      if (contentType.includes("application/json") || typeof response.json === "function") {
         errorData = await response.json();
-      } else {
+      } else if (typeof response.text === "function") {
         const text = await response.text();
         console.error("Non-JSON response from server:", text);
       }

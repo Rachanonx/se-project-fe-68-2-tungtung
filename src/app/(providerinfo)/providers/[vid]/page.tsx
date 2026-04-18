@@ -62,6 +62,17 @@ export default async function VenueDetailPage({
             <p className="mb-2">
               Tel: {venueDetail.data.tel}
             </p>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 text-xs font-bold tracking-wide uppercase">
+                Rating
+              </span>
+              <span className="inline-flex items-center rounded-full bg-black text-white px-3 py-1 text-sm font-semibold">
+                ★ {(venueDetail.data.averageRating ?? 0).toFixed(1)} / 5
+              </span>
+              <span className="text-sm text-gray-500">
+                ({venueDetail.data.reviewCount ?? 0} review{(venueDetail.data.reviewCount ?? 0) === 1 ? '' : 's'})
+              </span>
+            </div>
           </div>
 
           <Link

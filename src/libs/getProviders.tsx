@@ -3,6 +3,7 @@ export default async function getProvider() {
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/providers`,
+    { cache: 'no-store' }
   );
   if (!response.ok) {
     throw new Error("Failed to fetch Provider");

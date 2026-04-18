@@ -10,11 +10,15 @@ export default function FeatureCard({
   providerId,
   providerName,
   providerAddress,
+  averageRating,
+  reviewCount,
   imgSrc,
 }: {
   providerId: string;
   providerName: string;
   providerAddress: string;
+  averageRating: number;
+  reviewCount: number;
   imgSrc: string;
 }) {
   const { data: session } = useSession();
@@ -104,6 +108,18 @@ export default function FeatureCard({
             "
           >
             Address: {providerAddress}
+          </div>
+
+          <div className="flex items-center gap-2 mt-1">
+            <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 text-xs font-bold tracking-wide uppercase">
+              Rating
+            </span>
+            <span className="inline-flex items-center rounded-full bg-black text-white px-3 py-1 text-sm font-semibold">
+              ★ {averageRating.toFixed(1)} / 5
+            </span>
+            <span className="text-xs text-[#0000008c] group-hover:text-black transition-colors duration-500">
+              {reviewCount} review{reviewCount === 1 ? '' : 's'}
+            </span>
           </div>
         </div>
 

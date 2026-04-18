@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import ReviewForm from './ReviewForm';
 import ReviewList from './ReviewList';
 import getReviews from '@/libs/getReviews';
@@ -16,6 +17,7 @@ interface ReviewSectionProps {
 
 export default function ReviewSection({ providerId, providerName }: ReviewSectionProps) {
   const { data: session } = useSession();
+  const router = useRouter();
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditingReview, setIsEditingReview] = useState(false);
@@ -71,6 +73,7 @@ export default function ReviewSection({ providerId, providerName }: ReviewSectio
       await deleteReview(reviewId, token);
       setReviews(reviews.filter((r) => r._id !== reviewId));
       setDeleteConfirm(null);
+      router.refresh();
     } catch (error: any) {
       alert(error.message || 'Failed to delete review');
     }
@@ -90,6 +93,7 @@ export default function ReviewSection({ providerId, providerName }: ReviewSectio
         setReviews(providerReviews);
         setIsEditingReview(false);
         setSelectedReview(null);
+        router.refresh();
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }

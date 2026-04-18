@@ -3,6 +3,8 @@ export interface ProviderItem {
     name: string,
     address: string,
     tel: string,
+  averageRating?: number,
+  reviewCount?: number,
     __v: number,
   }
   

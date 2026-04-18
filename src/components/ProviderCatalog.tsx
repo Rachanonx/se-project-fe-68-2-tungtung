@@ -111,6 +111,8 @@ export default function ProviderCatalog({
               providerId={providerItem._id}
               providerName={providerItem.name}
               providerAddress={providerItem.address}
+              averageRating={providerItem.averageRating ?? 0}
+              reviewCount={providerItem.reviewCount ?? 0}
               imgSrc={getImageFromId(providerItem._id)}
             />
           </Link>

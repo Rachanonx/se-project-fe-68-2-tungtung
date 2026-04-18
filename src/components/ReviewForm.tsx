@@ -33,9 +33,16 @@ export default function ReviewForm({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [hasSubmitAttempt, setHasSubmitAttempt] = useState(false);
 
   const loading = useAppSelector((state) => state.reviewSlice.loading);
   const error = useAppSelector((state) => state.reviewSlice.error);
+
+  useEffect(() => {
+    // Avoid showing stale API errors from previous form interactions.
+    setHasSubmitAttempt(false);
+    dispatch(setError(null));
+  }, [dispatch, providerId, reviewId, isEditing]);
 
   // Validation function
   const validateForm = (): boolean => {
@@ -57,6 +64,8 @@ export default function ReviewForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setHasSubmitAttempt(true);
+    dispatch(setError(null));
 
     if (!validateForm()) {
       return;
@@ -175,7 +184,7 @@ export default function ReviewForm({
         </div>
 
         {/* Messages */}
-        {error && <div className={styles.errorMessage}>{error}</div>}
+        {hasSubmitAttempt && error && <div className={styles.errorMessage}>{error}</div>}
         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
 
         {/* Submit Button */}
