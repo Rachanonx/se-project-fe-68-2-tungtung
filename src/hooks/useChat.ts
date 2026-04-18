@@ -3,8 +3,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ChatMessage } from '../../interface';
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL;
+// REST calls (Vercel หรือ local)
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+// Socket.IO (Render หรือ local) — fallback เป็น BACKEND_URL ถ้าไม่ได้ตั้ง
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? BACKEND_URL;
 const POLL_INTERVAL_MS = 5000;
 
 export function useChat(token: string | undefined, userId: string | undefined) {
@@ -27,7 +29,7 @@ export function useChat(token: string | undefined, userId: string | undefined) {
   useEffect(() => {
     if (!token || !userId) return;
 
-    const socket = io(BACKEND_URL, {
+    const socket = io(SOCKET_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 3,
