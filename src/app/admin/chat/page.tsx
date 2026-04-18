@@ -22,7 +22,7 @@ export default function AdminChatPage() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
 
-  const { messages, sendMessage, loadHistory, joinRoom, markRead } = useChat(
+  const { messages, connected, sendMessage, loadHistory, joinRoom, markRead } = useChat(
     token,
     adminId
   );
@@ -100,8 +100,14 @@ export default function AdminChatPage() {
     <div className="fixed inset-0 top-16 flex bg-gray-50 overflow-hidden">
       {/* Sidebar — room list */}
       <aside className="w-72 bg-white border-r border-gray-200 flex flex-col">
-        <div className="px-4 py-4 border-b border-gray-200">
+        <div className="px-4 py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="font-semibold text-gray-800">User Conversations</h2>
+          <div className="flex items-center gap-1.5">
+            <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-400' : 'bg-gray-400'}`} />
+            <span className={`text-xs font-medium ${connected ? 'text-green-600' : 'text-gray-400'}`}>
+              {connected ? 'Online' : 'Offline'}
+            </span>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto">
