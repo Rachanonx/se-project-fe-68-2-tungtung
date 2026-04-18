@@ -145,9 +145,27 @@ export function useChat(token: string | undefined, userId: string | undefined) {
     socketRef.current?.emit('join_room', roomId);
   }, []);
 
-  const markRead = useCallback((roomId: string) => {
-    socketRef.current?.emit('mark_read', roomId);
-  }, []);
+  const markRead = useCallback(
+    async (roomId: string) => {
+      if (socketRef.current?.connected) {
+        socketRef.current.emit('mark_read', roomId);
+        return;
+      }
+      // REST fallback
+      try {
+        await fetch(`${BACKEND_URL}/api/v1/chat/${roomId}/read`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMessages((prev) =>
+          prev.map((m) => (m.room === roomId ? { ...m, status: 'read' as const } : m))
+        );
+      } catch {
+        // silently ignore
+      }
+    },
+    [token]
+  );
 
   return { messages, setMessages, connected, sendError, sendMessage, loadHistory, joinRoom, markRead };
 }
