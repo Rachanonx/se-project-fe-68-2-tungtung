@@ -1,5 +1,8 @@
 Vercel : https://se-project-fe-68-2-tungtung.vercel.app/
 
+## Git Remote Setup
+
+```bash
 git remote set-url --add --push origin https://github.com/2110503-CEDT68/se-project-fe-68-2-tungtung
 git remote set-url --add --push origin https://github.com/Rachanonx/se-project-fe-68-2-tungtung
 
