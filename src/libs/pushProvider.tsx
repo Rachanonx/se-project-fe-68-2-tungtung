@@ -14,7 +14,7 @@ export default async function pushProvider(token: string) {
     console.log("Sending data:", providerData); // Debug ดูข้อมูลก่อนส่ง
 
     const response = await fetch(
-        "https://fe-project-68-bongbing-backend.vercel.app/api/v1/providers",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/providers`,
         {
             method: "POST", // ต้องเป็น POST เพื่อสร้างข้อมูล
             headers: {

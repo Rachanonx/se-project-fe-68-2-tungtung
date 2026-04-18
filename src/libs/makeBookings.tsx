@@ -4,7 +4,7 @@ export default async function makeBooking(
   rentalDate: string, 
   userId: string // Added userId parameter
 ) {
-    const response = await fetch(`https://fe-project-68-bongbing-backend.vercel.app/api/v1/providers/${providerId}/bookings`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/providers/${providerId}/bookings`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

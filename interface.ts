@@ -18,3 +18,22 @@ export interface BookingItem {
     provider: string;
     bookDate: string;
   }
+
+export interface ChatMessage {
+  _id: string;
+  room: string;
+  sender: string;
+  senderName: string;
+  senderRole: 'user' | 'admin';
+  content: string;
+  status: 'sent' | 'read';
+  timestamp: string;
+}
+
+export interface ChatRoom {
+  _id: string;
+  userName: string;
+  lastMessage: string;
+  lastTimestamp: string;
+  unreadCount: number;
+}

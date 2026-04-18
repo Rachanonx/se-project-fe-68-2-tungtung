@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { BACKEND_URL } from "@/libs/config";
 
 export default function TopMenu() {
   const { data: session } = useSession();
@@ -15,14 +16,11 @@ export default function TopMenu() {
     try {
       const token = (session?.user as any)?.token;
       if (token) {
-        await fetch(
-          "https://fe-project-68-bongbing-backend.vercel.app/api/v1/auth/logout",
-          {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-            mode: "cors",
-          }
-        ).catch(() => console.warn("Backend logout failed, clearing local session."));
+        await fetch(`${BACKEND_URL}/api/v1/auth/logout`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+          mode: "cors",
+        }).catch(() => console.warn("Backend logout failed, clearing local session."));
       }
       setDropdownOpen(false);
       await signOut({ callbackUrl: "/" });
@@ -48,6 +46,11 @@ export default function TopMenu() {
             <Link href="/mybooking" className="text-black rounded-md px-4 py-2 font-medium hover:bg-gray-300 transition-opacity">
               My Booking
             </Link>
+            {(session.user as any)?.role === 'admin' && (
+              <Link href="/admin/chat" className="text-black rounded-md px-4 py-2 font-medium hover:bg-gray-300 transition-opacity">
+                Manage Chats
+              </Link>
+            )}
             <Link href="/providers" className="text-black rounded-md px-4 py-2 font-medium hover:bg-gray-300 transition-opacity">
               Providers
             </Link>
@@ -109,7 +112,6 @@ export default function TopMenu() {
         ) : (
           /* --- GUEST VIEW (NOT LOGGED IN) --- */
           <div className="flex items-center gap-4 md:gap-6">
-            {/* Added Providers button here */}
             <Link
               href="/providers"
               className="text-black font-medium px-4 py-2 rounded-md hover:bg-gray-300 transition-opacity text-base"

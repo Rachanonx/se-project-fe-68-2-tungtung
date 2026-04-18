@@ -2,8 +2,9 @@ export default async function userLogin(
   userEmail: string,
   userPassword: string,
 ) {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   const response = await fetch(
-    "https://fe-project-68-bongbing-backend.vercel.app/api/v1/auth/login",
+    `${backendUrl}/api/v1/auth/login`,
     {
       method: "POST",
       headers: {

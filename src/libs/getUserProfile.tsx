@@ -1,6 +1,6 @@
 export default async function getUserProfile(token: string) {
   const response = await fetch(
-    "https://fe-project-68-bongbing-backend.vercel.app/api/v1/auth/me",
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`,
     {
       method: "GET",
       headers: {

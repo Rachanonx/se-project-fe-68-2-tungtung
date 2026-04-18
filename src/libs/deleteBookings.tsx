@@ -1,5 +1,5 @@
 export default async function deleteBooking(id: string, token: string) {
-    const response = await fetch(`https://fe-project-68-bongbing-backend.vercel.app/api/v1/bookings/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/bookings/${id}`, {
         method: "DELETE",
         headers: {
             authorization: `Bearer ${token}`,

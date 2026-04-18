@@ -16,8 +16,9 @@ export const authOptions: AuthOptions = {
         const user = await userLogin(credentials.email, credentials.password);
         if (!user?.token) return null;
 
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "https://fe-project-68-bongbing-backend.vercel.app";
         const profileRes = await fetch(
-          "https://fe-project-68-bongbing-backend.vercel.app/api/v1/auth/me",
+          `${backendUrl}/api/v1/auth/me`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${user.token}` },

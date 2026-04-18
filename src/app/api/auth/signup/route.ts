@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Call backend API to register user
     const response = await fetch(
-      "https://fe-project-68-bongbing-backend.vercel.app/api/v1/auth/register",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
       {
         method: "POST",
         headers: {
