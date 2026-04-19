@@ -13,6 +13,13 @@ const config = {
   preset: 'ts-jest',
   verbose: true,
   testTimeout: 30000,
+  collectCoverageFrom: ['<rootDir>/src/libs/**/*.{ts,tsx}'],
+  coverageThreshold: {
+    global: {
+      statements: 100,
+      branches: 100,
+    },
+  },
   globals: {
     fetch: global.fetch,
   }
