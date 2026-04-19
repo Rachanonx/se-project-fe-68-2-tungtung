@@ -1,5 +1,5 @@
 import { validateReview, sanitizeReviewData } from '../libs/reviewValidation';
-import { ReviewFormData } from '../interface';
+import { ReviewFormData } from '../../interface';
 
 describe('Review Validation Tests', () => {
   // Rating validation tests

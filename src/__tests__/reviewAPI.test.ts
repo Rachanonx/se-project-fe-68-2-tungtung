@@ -3,7 +3,6 @@ import updateReview from '../libs/updateReview';
 import deleteReview from '../libs/deleteReview';
 import getReviews from '../libs/getReviews';
 import getReview from '../libs/getReview';
-import { ReviewFormData } from '../interface';
 
 // Mock fetch
 global.fetch = jest.fn();
