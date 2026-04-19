@@ -7,31 +7,7 @@ import dayjs, { Dayjs } from "dayjs";
 import DateReserve from "@/components/DateReserve";
 import { useSession } from "next-auth/react";
 import postBooking from "@/libs/makeBookings";
-
-// ====== Seed Image Logic ======
-const images = [
-  "/img/banner1.png",
-  "/img/banner2.png",
-  "/img/banner3.png",
-  "/img/car1.png",
-  "/img/car2.png",
-  "/img/car3.png",
-  "/img/car4.png",
-];
-
-function hashString(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 7) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-function getImageFromId(id: string) {
-  const hash = hashString(id || "default");
-  return images[hash % images.length];
-}
+import { getImageFromId } from "@/libs/carImages";
 // =================================
 
 export default function Booking() {

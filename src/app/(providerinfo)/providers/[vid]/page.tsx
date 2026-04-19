@@ -2,30 +2,7 @@ import Image from "next/image";
 import getProvider from "@/libs/getProvider";
 import Link from "next/link";
 import ReviewSection from "@/components/ReviewSection";
-
-const images = [
-  "/img/banner1.png",
-  "/img/banner2.png",
-  "/img/banner3.png",
-  "/img/car1.png",
-  "/img/car2.png",
-  "/img/car3.png",
-  "/img/car4.png",
-];
-
-function hashString(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 7) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-function getImageFromId(id: string) {
-  const hash = hashString(id);
-  return images[hash % images.length];
-}
+import { getImageFromId } from "@/libs/carImages";
 
 export default async function VenueDetailPage({
   params,

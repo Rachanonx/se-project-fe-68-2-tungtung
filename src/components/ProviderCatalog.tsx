@@ -6,34 +6,7 @@ import FeatureCard from "./FeatureCard";
 import type { ProviderJson, ProviderItem } from "../../interface";
 import pushProvider from "@/libs/pushProvider";
 import { useRouter } from "next/navigation";
-
-// 1. Array for random/hashed banners
-const images = [
-  "/img/banner1.png",
-  "/img/banner2.png",
-  "/img/banner3.png",
-  "/img/car1.png",
-  "/img/car2.png",
-  "/img/car3.png",
-  "/img/car4.png",
-];
-
-// 2. Hash function to ensure same ID always gets same image
-function hashString(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 7) - hash + str.charCodeAt(i);
-    hash |= 0; 
-  }
-  return Math.abs(hash);
-}
-
-// 3. Image selection logic
-function getImageFromId(id: string) {
-  const hash = hashString(id);
-  const index = hash % images.length;
-  return images[index];
-}
+import { getImageFromId } from "@/libs/carImages";
 
 export default function ProviderCatalog({
   providersJson,

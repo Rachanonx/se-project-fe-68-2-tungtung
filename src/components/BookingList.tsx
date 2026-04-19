@@ -5,32 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import dayjs from "dayjs";
 import deleteBooking from "@/libs/deleteBookings";
-import updateBooking from "@/libs/updateBookings"; // Import the new lib
-
-// ====== Seed Image Logic ======
-const images = [
-  "/img/banner1.png",
-  "/img/banner2.png",
-  "/img/banner3.png",
-  "/img/car1.png",
-  "/img/car2.png",
-  "/img/car3.png",
-  "/img/car4.png",
-];
-
-function hashString(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 7) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-function getImageFromId(id: string) {
-  const hash = hashString(id || "default");
-  return images[hash % images.length];
-}
+import updateBooking from "@/libs/updateBookings";
+import { getImageFromId } from "@/libs/carImages";
 
 export default function BookingList({ bookingsJson }: { bookingsJson: Promise<any> }) {
   const bookingsReady = use(bookingsJson);
