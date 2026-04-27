@@ -9,6 +9,7 @@ interface ReviewListProps {
   reviews: ReviewItem[];
   loading?: boolean;
   currentUserId?: string;
+  isAdmin?: boolean;
   onEditClick?: (review: ReviewItem) => void;
   onDeleteClick?: (reviewId: string) => void;
 }
@@ -18,6 +19,7 @@ export default function ReviewList({
   reviews,
   loading = false,
   currentUserId,
+  isAdmin = false,
   onEditClick,
   onDeleteClick,
 }: ReviewListProps) {
@@ -84,25 +86,38 @@ export default function ReviewList({
                   <h3 className={styles.userName}>{userName}</h3>
                   <p className={styles.reviewDate}>{formatDate(review.createdAt)}</p>
                 </div>
-                {isOwner && (
+                {(isOwner || isAdmin) && (
                   <div className={styles.actions}>
-                    {onEditClick && (
-                      <button
-                        className={styles.editButton}
-                        onClick={() => onEditClick(review)}
-                        title="Edit review"
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {onDeleteClick && (
+                    {isAdmin && (
                       <button
                         className={styles.deleteButton}
-                        onClick={() => onDeleteClick(review._id)}
-                        title="Delete review"
+                        onClick={() => onDeleteClick?.(review._id)}
+                        title="Delete review as admin"
                       >
                         Delete
                       </button>
+                    )}
+                    {isOwner && (
+                      <>
+                        {onEditClick && (
+                          <button
+                            className={styles.editButton}
+                            onClick={() => onEditClick(review)}
+                            title="Edit review"
+                          >
+                            Edit
+                          </button>
+                        )}
+                        {onDeleteClick && (
+                          <button
+                            className={styles.deleteButton}
+                            onClick={() => onDeleteClick(review._id)}
+                            title="Delete review"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 )}
