@@ -22,7 +22,7 @@ export default function AdminChatPage() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
 
-  const { messages, connected, sendMessage, loadHistory, joinRoom, markRead } = useChat(
+  const { messages, setMessages, connected, sendMessage, loadHistory, joinRoom, markRead } = useChat(
     token,
     adminId
   );
@@ -93,7 +93,7 @@ export default function AdminChatPage() {
   const handleEdit = async (id: string, content: string) => {
     if (!token) return;
 
-    await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
+    const res = await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -101,17 +101,49 @@ export default function AdminChatPage() {
       },
       body: JSON.stringify({ content }),
     });
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+
+    // 🔥 update message instantly
+    setMessages(prev =>
+      prev.map(m => (m._id === id ? data.data : m))
+    );
+
+    // 🔥 update sidebar preview
+    setRooms(prev =>
+      prev.map(r =>
+        r._id === selectedRoom
+          ? { ...r, lastMessage: data.data.content }
+          : r
+      )
+    );
   };
 
   const handleDelete = async (id: string) => {
     if (!token) return;
 
-    await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
+    const res = await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    if (!res.ok) return;
+
+    // 🔥 remove from UI instantly
+    setMessages(prev => prev.filter(m => m._id !== id));
+
+    // 🔥 optional: update sidebar preview
+    setRooms(prev =>
+      prev.map(r =>
+        r._id === selectedRoom
+          ? { ...r, lastMessage: '' } // or "Message deleted"
+          : r
+      )
+    );
   };
 
   const roomMessages = selectedRoom
