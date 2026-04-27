@@ -17,19 +17,31 @@ export default async function createReview(
         body: JSON.stringify(reviewData),
       }
     );
-    if (!response.ok) {
-      let errorMessage = `API Error: ${response.status} ${response.statusText}`;
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorMessage;
-      } catch {
-        // Use default error message if response is not JSON
+
+    let parsedData: any = null;
+    const contentType = response.headers?.get?.("content-type") || "";
+
+    try {
+      if (contentType.includes("application/json") || typeof response.json === "function") {
+        parsedData = await response.json();
+      } else if (typeof response.text === "function") {
+        await response.text();
       }
+    } catch {
+      // Keep parsedData as null and use fallbacks below
+    }
+
+    if (!response.ok) {
+      const errorMessage =
+        parsedData?.message || `API Error: ${response.status} ${response.statusText}`;
       throw new Error(errorMessage);
     }
 
-    const data = await response.json();
-    return data;
+    if (!parsedData) {
+      return { success: true } as ReviewResponse;
+    }
+
+    return parsedData;
   } catch (error) {
     console.error("Error creating review:", error);
     throw error;

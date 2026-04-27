@@ -88,15 +88,6 @@ export default function ReviewList({
                 </div>
                 {(isOwner || isAdmin) && (
                   <div className={styles.actions}>
-                    {isAdmin && (
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => onDeleteClick?.(review._id)}
-                        title="Delete review as admin"
-                      >
-                        Delete
-                      </button>
-                    )}
                     {isOwner && (
                       <>
                         {onEditClick && (
@@ -118,6 +109,15 @@ export default function ReviewList({
                           </button>
                         )}
                       </>
+                    )}
+                    {!isOwner && isAdmin && onDeleteClick && (
+                      <button
+                        className={styles.deleteButton}
+                        onClick={() => onDeleteClick(review._id)}
+                        title="Delete review as admin"
+                      >
+                        Delete
+                      </button>
                     )}
                   </div>
                 )}

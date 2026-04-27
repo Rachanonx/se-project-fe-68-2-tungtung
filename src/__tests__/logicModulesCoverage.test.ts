@@ -14,6 +14,13 @@ import { sanitizeReviewData, validateReview } from '../libs/reviewValidation';
 import updateBooking from '../libs/updateBookings';
 import updateReview from '../libs/updateReview';
 import userLogin from '../libs/userLogIn';
+import {
+  allImages,
+  carImages,
+  getCarImageFromId,
+  getImageFromId,
+  hashString,
+} from '../libs/carImages';
 
 global.fetch = jest.fn();
 
@@ -410,6 +417,53 @@ describe('Logic Modules Full Coverage', () => {
         const mod = require('../libs/config');
         expect(mod.BACKEND_URL).toBe('https://se-project-be-68-2-tungtung.vercel.app');
       });
+    });
+  });
+
+  describe('carImages utility', () => {
+    it('hashString is deterministic and non-negative', () => {
+      const first = hashString('provider-123');
+      const second = hashString('provider-123');
+      const different = hashString('provider-456');
+
+      expect(first).toBe(second);
+      expect(first).toBeGreaterThanOrEqual(0);
+      expect(different).toBeGreaterThanOrEqual(0);
+    });
+
+    it('getCarImageFromId returns an image from the car image set', () => {
+      const image = getCarImageFromId('provider-123');
+      expect(carImages).toContain(image);
+
+      const sameImage = getCarImageFromId('provider-123');
+      expect(sameImage).toBe(image);
+    });
+
+    it('getImageFromId returns an image from the full image set', () => {
+      const image = getImageFromId('banner-xyz');
+      expect(allImages).toContain(image);
+
+      const sameImage = getImageFromId('banner-xyz');
+      expect(sameImage).toBe(image);
+    });
+
+    it('exports image arrays with expected contents', () => {
+      expect(carImages).toEqual([
+        '/img/car1.png',
+        '/img/car2.png',
+        '/img/car3.png',
+        '/img/car4.png',
+      ]);
+
+      expect(allImages).toEqual([
+        '/img/banner1.png',
+        '/img/banner2.png',
+        '/img/banner3.png',
+        '/img/car1.png',
+        '/img/car2.png',
+        '/img/car3.png',
+        '/img/car4.png',
+      ]);
     });
   });
 });
