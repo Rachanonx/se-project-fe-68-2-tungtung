@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+const backendUrl =
+  process.env.NEXT_PUBLIC_BACKEND_URL ??
+  "https://fe-project-68-bongbing-backend.vercel.app";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -13,7 +17,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/v1/:path*",
-        destination: "https://fe-project-68-bongbing-backend.vercel.app/api/v1/:path*",
+        destination: `${backendUrl}/api/v1/:path*`,
       },
     ];
   },
