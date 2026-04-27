@@ -80,7 +80,6 @@ export default function ChatWindow({ onClose }: Props) {
 
   if (!res.ok) return;
 
-  // 🔥 remove from UI immediately
   setMessages(prev => prev.filter(m => m._id !== id));
 };
   
