@@ -49,6 +49,26 @@ export default function ChatWindow({ onClose }: Props) {
       handleSend();
     }
   };
+
+  const handleEdit = async (id: string, content: string) => {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content }),
+    });
+  };
+
+  const handleDelete = async (id: string) => {
+    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
   
   return (
     <div className="flex flex-col h-full">
@@ -86,6 +106,8 @@ export default function ChatWindow({ onClose }: Props) {
               key={msg._id}
               message={msg}
               isOwn={msg.sender === userId}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))
         )}

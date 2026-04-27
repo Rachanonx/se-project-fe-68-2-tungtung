@@ -46,7 +46,7 @@ export default function AdminChatPage() {
       .then((data) => {
         if (data.success) setRooms(data.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [token]);
 
   // On room select: join socket room + load history
@@ -90,6 +90,30 @@ export default function AdminChatPage() {
     }
   };
 
+  const handleEdit = async (id: string, content: string) => {
+    if (!token) return;
+
+    await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content }),
+    });
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!token) return;
+
+    await fetch(`${BACKEND_URL}/api/v1/chat/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  };
+
   const roomMessages = selectedRoom
     ? messages.filter((m) => m.room === selectedRoom)
     : [];
@@ -120,9 +144,8 @@ export default function AdminChatPage() {
             <button
               key={room._id}
               onClick={() => selectRoom(room._id)}
-              className={`w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                selectedRoom === room._id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''
-              }`}
+              className={`w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${selectedRoom === room._id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''
+                }`}
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-800 truncate">
@@ -160,7 +183,7 @@ export default function AdminChatPage() {
               </h3>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0">
+            <div className="flex-1 overflow-y-auto px-4 py-4 min-h-0 min-w-0">
               {roomMessages.length === 0 && (
                 <p className="text-center text-gray-400 text-sm mt-8">No messages yet</p>
               )}
@@ -169,6 +192,8 @@ export default function AdminChatPage() {
                   key={msg._id}
                   message={msg}
                   isOwn={msg.senderRole === 'admin'}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
                 />
               ))}
               <div ref={bottomRef} />

@@ -55,6 +55,16 @@ export function useChat(token: string | undefined, userId: string | undefined) {
       );
     });
 
+    socket.on('message_updated', (updatedMsg) => {
+      setMessages(prev =>
+        prev.map(m => m._id === updatedMsg._id ? updatedMsg : m)
+      );
+    });
+
+    socket.on('message_deleted', ({ _id }) => {
+      setMessages(prev => prev.filter(m => m._id !== _id));
+    });
+
     return () => {
       socket.disconnect();
     };
