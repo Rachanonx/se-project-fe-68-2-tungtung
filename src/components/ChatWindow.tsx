@@ -13,7 +13,7 @@ export default function ChatWindow({ onClose }: Props) {
   const token = (session?.user as any)?.token as string | undefined;
   const userId = (session?.user as any)?._id as string | undefined;
 
-  const { messages, connected, sendError, sendMessage, loadHistory, markRead } = useChat(token, userId);
+  const { messages, setMessages, connected, sendError, sendMessage, loadHistory, markRead } = useChat(token, userId);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -51,24 +51,38 @@ export default function ChatWindow({ onClose }: Props) {
   };
 
   const handleEdit = async (id: string, content: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ content }),
-    });
-  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ content }),
+  });
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  // 🔥 update UI immediately
+  setMessages(prev =>
+    prev.map(m => (m._id === id ? data.data : m))
+  );
+};
 
   const handleDelete = async (id: string) => {
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/chat/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) return;
+
+  // 🔥 remove from UI immediately
+  setMessages(prev => prev.filter(m => m._id !== id));
+};
   
   return (
     <div className="flex flex-col h-full">
