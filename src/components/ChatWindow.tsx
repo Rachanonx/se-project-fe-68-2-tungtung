@@ -25,7 +25,7 @@ export default function ChatWindow({ onClose }: Props) {
       loadHistory(userId);
       markRead(userId);
     }
-  }, [userId, loadHistory, markRead]);
+  }, [userId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -49,7 +49,7 @@ export default function ChatWindow({ onClose }: Props) {
       handleSend();
     }
   };
-
+  
   return (
     <div className="flex flex-col h-full">
       {/* Header */}

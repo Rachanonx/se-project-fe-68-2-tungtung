@@ -103,6 +103,28 @@ export function useChat(token: string | undefined, userId: string | undefined) {
     [token]
   );
 
+  const markRead = useCallback(
+    async (roomId: string) => {
+      if (socketRef.current?.connected) {
+        socketRef.current.emit('mark_read', roomId);
+        return;
+      }
+      // REST fallback
+      try {
+        await fetch(`${BACKEND_URL}/api/v1/chat/${roomId}/read`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMessages((prev) =>
+          prev.map((m) => (m.room === roomId ? { ...m, status: 'read' as const } : m))
+        );
+      } catch {
+        // silently ignore
+      }
+    },
+    [token]
+  );
+
   const sendMessage = useCallback(
     async (content: string, room?: string): Promise<boolean> => {
       setSendError(null);
@@ -146,28 +168,6 @@ export function useChat(token: string | undefined, userId: string | undefined) {
     pollRoomRef.current = roomId;
     socketRef.current?.emit('join_room', roomId);
   }, []);
-
-  const markRead = useCallback(
-    async (roomId: string) => {
-      if (socketRef.current?.connected) {
-        socketRef.current.emit('mark_read', roomId);
-        return;
-      }
-      // REST fallback
-      try {
-        await fetch(`${BACKEND_URL}/api/v1/chat/${roomId}/read`, {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setMessages((prev) =>
-          prev.map((m) => (m.room === roomId ? { ...m, status: 'read' as const } : m))
-        );
-      } catch {
-        // silently ignore
-      }
-    },
-    [token]
-  );
 
   return { messages, setMessages, connected, sendError, sendMessage, loadHistory, joinRoom, markRead };
 }

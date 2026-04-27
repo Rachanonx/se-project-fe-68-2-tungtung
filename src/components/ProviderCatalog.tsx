@@ -1,5 +1,5 @@
 "use client";
-import React, { use } from "react";
+import React, { use, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import FeatureCard from "./FeatureCard";
@@ -45,6 +45,17 @@ export default function ProviderCatalog({
     }
 };
 
+  //Search field states
+  const [search, setSearch] = useState("");
+
+  // ===== FILTER =====
+  const filteredProviders = useMemo(() => {
+  return providersJsonReady.data.filter((provider) =>
+    provider.name?.toLowerCase().includes(search.toLowerCase())
+  );
+}, [providersJsonReady, search]);
+
+
   return (
     <div className="w-full flex flex-col items-center">
       <header className="w-full max-w-[1750px] flex justify-between items-end px-4 mt-10">
@@ -72,9 +83,50 @@ export default function ProviderCatalog({
         )}
       </header>
 
+      {/* ===== SEARCH BAR ===== */}
+      <div className="w-full max-w-[1750px] px-4 mt-8">
+  <div className="flex items-center bg-white border border-neutral-200 rounded-xl px-5 py-3 shadow-sm focus-within:ring-2 focus-within:ring-[#828282] transition-all">
+
+    {/* 🔍 Icon */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5 text-neutral-400 mr-3"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M21 21l-4.35-4.35m1.1-4.65a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
+
+    {/* Input */}
+    <input
+      type="text"
+      placeholder="Search providers..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      className="w-full bg-transparent outline-none text-sm text-black placeholder:text-neutral-400"
+    />
+
+    {/* ❌ Clear button */}
+    {search && (
+      <button
+        onClick={() => setSearch("")}
+        className="ml-2 text-neutral-400 hover:text-black transition"
+      >
+        ✕
+      </button>
+    )}
+  </div>
+</div>
+
       {/* Grid Display */}
       <div className="grid grid-cols-[repeat(auto-fit,400px)] justify-center gap-10 px-4 py-12 w-full">
-        {providersJsonReady.data.map((providerItem: ProviderItem) => (
+        {filteredProviders.map((providerItem: ProviderItem) => (
           <Link
             href={`/providers/${providerItem._id}`}
             key={providerItem._id}
