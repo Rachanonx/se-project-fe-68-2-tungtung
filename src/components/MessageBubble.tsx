@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChatMessage } from '../../interface';
 
 interface Props {
@@ -20,6 +20,19 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(message.content);
   const [loading, setLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuOpen]);
 
   const time = new Date(message.timestamp).toLocaleTimeString([], {
     hour: '2-digit',
@@ -34,7 +47,13 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
     setLoading(false);
   };
 
+  const handleEditClick = () => {
+    setMenuOpen(false);
+    setEditing(true);
+  };
+
   const handleDelete = async () => {
+    setMenuOpen(false);
     if (!confirm("Delete this message?")) return;
     setLoading(true);
     await onDelete(message._id);
@@ -43,7 +62,7 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
 
   return (
     <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-2 min-w-0`}>
-      <div className="max-w-[75%] break-words">
+      <div className={`max-w-[75%] break-words ${editing ? 'w-full' : ''}`}>
         {!isOwn && (
           <p className="text-xs text-gray-500 mb-1 px-1">{message.senderName}</p>
         )}
@@ -55,30 +74,35 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
               : 'bg-gray-100 text-gray-900 rounded-bl-sm'
           }`}
         >
-          {/* ✏️ EDIT MODE */}
           {editing ? (
-            <>
+            <div className="flex flex-col gap-2">
               <textarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                className="w-full text-sm text-black rounded p-1"
+                autoFocus
+                rows={2}
+                className="w-full text-sm text-gray-900 bg-white rounded-lg px-2.5 py-1.5 border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
               />
-              <div className="flex gap-2 mt-1 justify-end">
+              <div className="flex gap-2 justify-end">
                 <button
-                  onClick={handleSave}
+                  onClick={() => {
+                    setValue(message.content);
+                    setEditing(false);
+                  }}
                   disabled={loading}
-                  className="text-xs bg-green-500 px-2 py-1 rounded"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setEditing(false)}
-                  className="text-xs bg-gray-400 px-2 py-1 rounded"
+                  className="text-xs px-3 py-1 rounded-md text-white/80 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   Cancel
                 </button>
+                <button
+                  onClick={handleSave}
+                  disabled={loading || !value.trim()}
+                  className="text-xs px-3 py-1 rounded-md bg-white text-blue-600 font-medium hover:bg-blue-50 disabled:opacity-50 transition-colors"
+                >
+                  {loading ? 'Saving…' : 'Save'}
+                </button>
               </div>
-            </>
+            </div>
           ) : (
             <>
               <p className="whitespace-pre-wrap break-words break-all">{message.content}</p>
@@ -90,24 +114,32 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
 
                 {isOwn && <StatusLabel status={message.status} />}
 
-                {/* ✏️ Edit button */}
                 {isOwn && (
-                  <button
-                    onClick={() => setEditing(true)}
-                    className="text-xs ml-2 opacity-70 hover:opacity-100"
-                  >
-                    ✏️
-                  </button>
-                )}
-
-                {/* 🗑 Delete button */}
-                {isOwn && (
-                  <button
-                    onClick={handleDelete}
-                    className="text-xs ml-1 opacity-70 hover:opacity-100"
-                  >
-                    🗑
-                  </button>
+                  <div className="relative ml-1" ref={menuRef}>
+                    <button
+                      onClick={() => setMenuOpen((v) => !v)}
+                      className="px-1 leading-none text-base opacity-70 hover:opacity-100"
+                      aria-label="Message options"
+                    >
+                      ⋮
+                    </button>
+                    {menuOpen && (
+                      <div className="absolute bottom-full right-0 mb-1 w-28 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10 overflow-hidden">
+                        <button
+                          onClick={handleEditClick}
+                          className="w-full text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={handleDelete}
+                          className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             </>
