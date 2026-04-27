@@ -12,6 +12,7 @@ import {
   Typography,
   Alert,
 } from "@mui/material";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 export default function SignupModal() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function SignupModal() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
   const formatTelephone = (value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 10);
@@ -249,7 +251,18 @@ export default function SignupModal() {
                 }}
               >
                 I agree to the{" "}
-                <Box component="span" sx={{ textDecoration: "underline" }}>
+                <Box 
+                  component="span" 
+                  sx={{ 
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                    color: "#1976d2",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowPrivacyPolicy(true);
+                  }}
+                >
                   terms & policy
                 </Box>
               </Typography>
@@ -306,6 +319,13 @@ export default function SignupModal() {
           </Link>
         </Typography>
       </Box>
+
+      {/* Privacy Policy Popup */}
+      <PrivacyPolicy 
+        isOpen={showPrivacyPolicy} 
+        onClose={() => setShowPrivacyPolicy(false)}
+        onAccept={() => setFormData((prev) => ({ ...prev, agreeToTerms: true }))}
+      />
 
     </Box>
   );

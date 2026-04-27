@@ -163,6 +163,7 @@ export default function ReviewSection({ providerId, providerName }: ReviewSectio
         reviews={reviews}
         loading={loading}
         currentUserId={session?.user?._id}
+        isAdmin={(session?.user as any)?.role === 'admin'}
         onEditClick={handleEditClick}
         onDeleteClick={handleDeleteClick}
       />
