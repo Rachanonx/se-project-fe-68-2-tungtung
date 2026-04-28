@@ -57,7 +57,13 @@ export default function BannerContainer() {
         onClick={goToNext}
         className="cursor-pointer absolute right-6 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow hover:bg-white"
       >
-        <Image src="/img/vectorNext.svg" alt="Next" width={10} height={10} />
+        <Image
+          src="/img/vectorNext.svg"
+          alt="Next"
+          width={10}
+          height={10}
+          style={{ width: "auto", height: "auto" }}
+        />
       </button>
 
       {/* BUTTON PREV */}
@@ -65,7 +71,13 @@ export default function BannerContainer() {
         onClick={goToPrev}
         className="cursor-pointer absolute left-6 top-1/2 z-30 -translate-y-1/2 rounded-full bg-white/90 p-3 shadow hover:bg-white"
       >
-        <Image src="/img/vectorPrev.svg" alt="Previous" width={10} height={10} />
+        <Image
+          src="/img/vectorPrev.svg"
+          alt="Previous"
+          width={10}
+          height={10}
+          style={{ width: "auto", height: "auto" }}
+        />
       </button>
 
       <div className="cursor-pointer absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 gap-2 rounded-full bg-white/80 px-3 py-2 backdrop-blur">

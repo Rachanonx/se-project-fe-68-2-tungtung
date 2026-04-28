@@ -13,7 +13,7 @@ export default function ChatWindow({ onClose }: Props) {
   const token = (session?.user as any)?.token as string | undefined;
   const userId = (session?.user as any)?._id as string | undefined;
 
-  const { messages, setMessages, connected, sendError, sendMessage, loadHistory, markRead } = useChat(token, userId);
+  const { messages, setMessages, connected, sendError, sendMessage, loadHistory, joinRoom, markRead } = useChat(token, userId);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -22,10 +22,11 @@ export default function ChatWindow({ onClose }: Props) {
   useEffect(() => {
     if (userId && !historyLoaded.current) {
       historyLoaded.current = true;
+      joinRoom(userId);
       loadHistory(userId);
       markRead(userId);
     }
-  }, [userId]);
+  }, [userId, joinRoom, loadHistory, markRead]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -84,7 +85,7 @@ export default function ChatWindow({ onClose }: Props) {
 };
   
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" data-testid="chat-window">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white rounded-t-xl flex-shrink-0">
         <div className="flex items-center gap-2">
@@ -138,6 +139,7 @@ export default function ChatWindow({ onClose }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          data-testid="chat-input"
           placeholder="Type a message…"
           rows={1}
           maxLength={1000}
@@ -146,6 +148,7 @@ export default function ChatWindow({ onClose }: Props) {
         <button
           onClick={handleSend}
           disabled={!input.trim() || sending}
+          data-testid="chat-send-button"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50 hover:bg-blue-700 transition-colors"
         >
           Send

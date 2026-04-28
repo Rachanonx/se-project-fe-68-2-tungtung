@@ -61,7 +61,11 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
   };
 
   return (
-    <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-2 min-w-0`}>
+    <div
+      className={`flex ${isOwn ? 'justify-end' : 'justify-start'} mb-2 min-w-0`}
+      data-testid="message-bubble"
+      data-message-id={message._id}
+    >
       <div className={`max-w-[75%] break-words ${editing ? 'w-full' : ''}`}>
         {!isOwn && (
           <p className="text-xs text-gray-500 mb-1 px-1">{message.senderName}</p>
@@ -118,6 +122,7 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
                   <div className="relative ml-1" ref={menuRef}>
                     <button
                       onClick={() => setMenuOpen((v) => !v)}
+                      data-testid="message-options-button"
                       className="px-1 leading-none text-base opacity-70 hover:opacity-100"
                       aria-label="Message options"
                     >
@@ -127,12 +132,14 @@ export default function MessageBubble({ message, isOwn, onEdit, onDelete }: Prop
                       <div className="absolute bottom-full right-0 mb-1 w-28 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-10 overflow-hidden">
                         <button
                           onClick={handleEditClick}
+                          data-testid="message-edit-button"
                           className="w-full text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gray-100"
                         >
                           Edit
                         </button>
                         <button
                           onClick={handleDelete}
+                          data-testid="message-delete-button"
                           className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50"
                         >
                           Delete

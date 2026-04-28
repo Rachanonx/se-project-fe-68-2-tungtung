@@ -176,6 +176,7 @@ export default function AdminChatPage() {
             <button
               key={room._id}
               onClick={() => selectRoom(room._id)}
+              data-testid={`chat-room-${room._id}`}
               className={`w-full text-left px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors ${selectedRoom === room._id ? 'bg-blue-50 border-l-4 border-l-blue-600' : ''
                 }`}
             >
@@ -236,6 +237,7 @@ export default function AdminChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
+                data-testid="admin-chat-input"
                 placeholder={`Reply to ${rooms.find((r) => r._id === selectedRoom)?.userName ?? selectedRoom}…`}
                 rows={2}
                 maxLength={1000}
@@ -244,6 +246,7 @@ export default function AdminChatPage() {
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || sending}
+                data-testid="admin-chat-send-button"
                 className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium disabled:opacity-50 hover:bg-blue-700 transition-colors self-end"
               >
                 Send

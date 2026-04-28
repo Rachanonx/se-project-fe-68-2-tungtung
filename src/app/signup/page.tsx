@@ -17,6 +17,7 @@ export default function SignupPage() {
           src="/img/signup.png"
           alt="Signup background"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
           priority
         />
@@ -27,6 +28,7 @@ export default function SignupPage() {
             alt="Car Rental"
             width={400}
             height={150}
+            style={{ width: "auto", height: "auto" }}
             className="object-contain"
           />
         </div>

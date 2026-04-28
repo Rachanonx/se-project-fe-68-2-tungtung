@@ -42,6 +42,7 @@ export default function ChatWidget() {
 
       <button
         onClick={open ? () => setOpen(false) : handleOpen}
+        data-testid={open ? 'chat-close-button' : 'chat-open-button'}
         className="relative w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
         aria-label={open ? 'Close chat' : 'Open support chat'}
       >

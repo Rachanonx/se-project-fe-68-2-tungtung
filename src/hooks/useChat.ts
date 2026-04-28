@@ -37,7 +37,13 @@ export function useChat(token: string | undefined, userId: string | undefined) {
 
     socketRef.current = socket;
 
-    socket.on('connect', () => setConnected(true));
+    socket.on('connect', () => {
+      setConnected(true);
+      const roomId = pollRoomRef.current ?? userId;
+      if (roomId) {
+        socket.emit('join_room', roomId);
+      }
+    });
     socket.on('disconnect', () => setConnected(false));
     // connect_error is silent — REST polling handles the fallback
     socket.on('connect_error', () => setConnected(false));

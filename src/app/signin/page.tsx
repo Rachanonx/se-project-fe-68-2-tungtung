@@ -15,6 +15,7 @@ export default function SigninPage() {
           src="/img/signin.png"
           alt="Signin background"
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
           priority
         />
@@ -24,6 +25,7 @@ export default function SigninPage() {
             alt="Car Rental"
             width={400}
             height={150}
+            style={{ width: "auto", height: "auto" }}
             className="object-contain"
           />
         </div>
