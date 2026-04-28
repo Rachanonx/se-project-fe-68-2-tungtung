@@ -1,0 +1,8 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  SNYK-JS-UUID-16133035:
+    - '*':
+        reason: next-auth v4 still requires a CommonJS-compatible uuid package; upgrading to the fixed major would be a breaking auth migration.
+        expires: '2026-07-31T00:00:00.000Z'
+patch: {}

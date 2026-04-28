@@ -6,7 +6,12 @@ const backendUrl =
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['drive.google.com']
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "drive.google.com",
+      },
+    ],
   },
   async rewrites() {
     return [
